@@ -1,9 +1,9 @@
 package main
 
 import (
-  "fmt"
+  "github.com/garigari-kun/easy-tmux/cmd"
 )
 
 func main() {
-  fmt.Println("Everything is wip")
+  cmd.Execute()
 }
