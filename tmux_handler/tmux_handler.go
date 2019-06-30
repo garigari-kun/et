@@ -6,6 +6,8 @@ import (
   "os/exec"
   "strings"
   "strconv"
+  "fmt"
+  "bufio"
 )
 
 type Session struct {
@@ -86,4 +88,28 @@ func SwitchSession(new_session string) {
   if err != nil {
     log.Print(err)
   }
+}
+
+func ListChoicesToTerminal(sessions Sessions) {
+  fmt.Println("Create new session or Attach another session.")
+  fmt.Println("0: Create New Session")
+  for _, session := range sessions {
+    fmt.Println(strconv.Itoa(session.Id) + ": " + session.Name)
+  }
+}
+
+func PromptUserChoice() string {
+  scanner := bufio.NewScanner(os.Stdin)
+  fmt.Println("Enter what you want: ")
+  scanner.Scan()
+  text := scanner.Text()
+  return text
+}
+
+func PromptUserToNewSessionName() string {
+  scanner := bufio.NewScanner(os.Stdin)
+  fmt.Println("Enter new session name: ")
+  scanner.Scan()
+  new_session_name := scanner.Text()
+  return new_session_name
 }

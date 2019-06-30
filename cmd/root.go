@@ -4,10 +4,6 @@ import (
   "github.com/spf13/cobra"
   "log"
   "os"
-  "bufio"
-  // "strings"
-  "fmt"
-  "strconv"
   "github.com/garigari-kun/easy-tmux/tmux_handler"
 )
 
@@ -22,32 +18,19 @@ func RootCmd() *cobra.Command {
       }
 
       sessions := tmux_handler.SetTmuxSessions()
-      fmt.Println("Create new session or Attach another session.")
-      fmt.Println("0: Create New Session")
-      for _, session := range sessions {
-        fmt.Println(strconv.Itoa(session.Id) + ": " + session.Name)
-      }
-      
-      scanner := bufio.NewScanner(os.Stdin)
-      fmt.Println("Enter what you want: ")
-      scanner.Scan()
-      text := scanner.Text()
-      fmt.Println(text)
+      tmux_handler.ListChoicesToTerminal(sessions)
+      choice := tmux_handler.PromptUserChoice()
 
-      if text == "0" {
-        scanner := bufio.NewScanner(os.Stdin)
-        fmt.Println("Enter new session name: ")
-        scanner.Scan()
-        new_session_name := scanner.Text()
+      if choice == "0" {
+        new_session_name := tmux_handler.PromptUserChoice()
         tmux_handler.CreateNewSession(new_session_name)  
         tmux_handler.SwitchSession(new_session_name)
       } else {
-        session_name := tmux_handler.FindSessionById(sessions, text)
+        session_name := tmux_handler.FindSessionById(sessions, choice)
         tmux_handler.SwitchSession(session_name)
       }
     },
   }
-
   return cmd
 }
 
