@@ -41,6 +41,9 @@ func RootCmd() *cobra.Command {
         new_session_name := scanner.Text()
         tmux_handler.CreateNewSession(new_session_name)  
         tmux_handler.SwitchSession(new_session_name)
+      } else {
+        session_name := tmux_handler.FindSessionById(sessions, text)
+        tmux_handler.SwitchSession(session_name)
       }
     },
   }

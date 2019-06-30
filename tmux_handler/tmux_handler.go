@@ -5,6 +5,7 @@ import (
   "os"
   "os/exec"
   "strings"
+  "strconv"
 )
 
 type Session struct {
@@ -38,6 +39,16 @@ func IsSessionAttached(sessions Sessions) bool {
     }
   }
   return false 
+}
+
+func FindSessionById(sessions Sessions, id string) string {
+  for _, session := range sessions {
+    if strconv.Itoa(session.Id) == id {
+      return session.Name
+    }
+  }
+  log.Print("Can't find session name the id you entered.")
+  return "false"
 }
 
 func AttachSession(session_name string) {
