@@ -17,19 +17,19 @@ type Session struct {
 type Sessions []Session
 
 func SetTmuxSessions() Sessions  {
-      out, err := exec.Command("sh", "-c", "tmux ls  -F '#{session_name}:#{session_attached}'").Output()
-      if err != nil {
-        log.Print(err)
-      }
-      splited_out := strings.Fields(string(out))
-      
-      var session_slice Sessions
-      for index, session := range splited_out {
-        splited_sessions := strings.Split(session, ":")
-        session := Session{Id: index + 1, Name: splited_sessions[0], Attached: splited_sessions[1]}
-        session_slice = append(session_slice, session)
-      }
-      return session_slice
+  out, err := exec.Command("sh", "-c", "tmux ls  -F '#{session_name}:#{session_attached}'").Output()
+  if err != nil {
+    log.Print(err)
+  }
+  splited_out := strings.Fields(string(out))
+
+  var session_slice Sessions
+  for index, session := range splited_out {
+    splited_sessions := strings.Split(session, ":")
+    session := Session{Id: index + 1, Name: splited_sessions[0], Attached: splited_sessions[1]}
+    session_slice = append(session_slice, session)
+  }
+  return session_slice
 }
 
 func IsSessionAttached(sessions Sessions) bool {
@@ -87,11 +87,3 @@ func SwitchSession(new_session string) {
     log.Print(err)
   }
 }
-
-func DetachSession() {
-  _, err := exec.Command("sh", "-c", "tmux detach-client").Output()
-  if err != nil {
-    log.Print("Failed: Detach session.")
-  }
-}
-
