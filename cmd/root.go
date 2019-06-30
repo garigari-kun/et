@@ -33,6 +33,15 @@ func RootCmd() *cobra.Command {
       scanner.Scan()
       text := scanner.Text()
       fmt.Println(text)
+
+      if text == "0" {
+        scanner := bufio.NewScanner(os.Stdin)
+        fmt.Println("Enter new session name: ")
+        scanner.Scan()
+        new_session_name := scanner.Text()
+        tmux_handler.CreateNewSession(new_session_name)  
+        tmux_handler.SwitchSession(new_session_name)
+      }
     },
   }
 

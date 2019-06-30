@@ -31,11 +31,56 @@ func SetTmuxSessions() Sessions  {
       return session_slice
 }
 
-func CreateNewSession() {
-      var attach_cmd *exec.Cmd
-      attach_cmd = exec.Command("tmux", "attach", "-t", "minne-app")
-      attach_cmd.Stdin = os.Stdin
-      attach_cmd.Stdout = os.Stdout
-      attach_cmd.Stderr = os.Stderr
-      attach_cmd.Run()
+func IsSessionAttached(sessions Sessions) bool {
+  for _, session := range sessions {
+    if session.Attached == "1" {
+      return true
+    }
+  }
+  return false 
 }
+
+func AttachSession(session_name string) {
+  var attach_cmd *exec.Cmd
+  attach_cmd = exec.Command("tmux", "attach", "-t", session_name)
+  attach_cmd.Stdin = os.Stdin
+  attach_cmd.Stdout = os.Stdout
+  attach_cmd.Stderr = os.Stderr
+  err := attach_cmd.Run()
+  if err != nil {
+    log.Print(err)
+  }
+}
+
+func CreateNewSession(new_session string) {
+  var attach_cmd *exec.Cmd
+  attach_cmd = exec.Command("tmux", "new", "-s", new_session, "-d")
+  attach_cmd.Stdin = os.Stdin
+  attach_cmd.Stdout = os.Stdout
+  attach_cmd.Stderr = os.Stderr
+  err := attach_cmd.Run()
+  if err != nil {
+    log.Print(err)
+  }
+}
+
+func SwitchSession(new_session string) {
+  var attach_cmd *exec.Cmd
+  attach_cmd = exec.Command("tmux switch-client -t " + new_session)
+  attach_cmd = exec.Command("tmux", "switch-client", "-t", new_session)
+  attach_cmd.Stdin = os.Stdin
+  attach_cmd.Stdout = os.Stdout
+  attach_cmd.Stderr = os.Stderr
+  err := attach_cmd.Run()
+  if err != nil {
+    log.Print(err)
+  }
+}
+
+func DetachSession() {
+  _, err := exec.Command("sh", "-c", "tmux detach-client").Output()
+  if err != nil {
+    log.Print("Failed: Detach session.")
+  }
+}
+
