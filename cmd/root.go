@@ -2,12 +2,13 @@ package cmd
 
 import (
   "github.com/spf13/cobra"
-  "fmt"
   "log"
   "os"
   "bufio"
-  "os/exec"
-  "strings"
+  // "strings"
+  "fmt"
+  "strconv"
+  "github.com/garigari-kun/easy-tmux/tmux_handler"
 )
 
 func RootCmd() *cobra.Command {
@@ -15,14 +16,18 @@ func RootCmd() *cobra.Command {
     Use:   "et",
     Short: "easy-tmux",
     Run: func(cmd *cobra.Command, args []string) {
-      out, err := exec.Command("sh", "-c", "tmux list-sessions | awk '{print $1}'").Output()
-      s_out := strings.Split(string(out), ":")
-      if err != nil {
-        log.Print(err)
+      env := os.Getenv("TMUX")
+      if env == "" {
+        log.Print("env load error")
       }
 
-      fmt.Println(s_out)
-
+      sessions := tmux_handler.SetTmuxSessions()
+      fmt.Println("Create new session or Attach another session.")
+      fmt.Println("0: Create New Session")
+      for _, session := range sessions {
+        fmt.Println(strconv.Itoa(session.Id) + ": " + session.Name)
+      }
+      
       scanner := bufio.NewScanner(os.Stdin)
       fmt.Println("Enter what you want: ")
       scanner.Scan()
