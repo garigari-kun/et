@@ -22,7 +22,7 @@ func RootCmd() *cobra.Command {
       choice := tmux_handler.PromptUserChoice()
 
       if choice == "0" {
-        new_session_name := tmux_handler.PromptUserChoice()
+        new_session_name := tmux_handler.PromptUserToNewSessionName()
         tmux_handler.CreateNewSession(new_session_name)  
         tmux_handler.SwitchSession(new_session_name)
       } else {
