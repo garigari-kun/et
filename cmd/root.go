@@ -9,7 +9,7 @@ import (
 
 func RootCmd() *cobra.Command {
   cmd := &cobra.Command{
-    Use:   "et",
+    Use: "et",
     Short: "easy-tmux",
     Run: func(cmd *cobra.Command, args []string) {
       env := os.Getenv("TMUX")
