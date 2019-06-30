@@ -94,7 +94,13 @@ func ListChoicesToTerminal(sessions Sessions) {
   fmt.Println("Create new session or Attach another session.")
   fmt.Println("0: Create New Session")
   for _, session := range sessions {
-    fmt.Println(strconv.Itoa(session.Id) + ": " + session.Name)
+    var list string
+    if session.Attached == "1" {
+      list = strconv.Itoa(session.Id) + ": " + session.Name + " (Attached)"
+    } else {
+      list = strconv.Itoa(session.Id) + ": " + session.Name
+    }
+    fmt.Println(list)
   }
 }
 
