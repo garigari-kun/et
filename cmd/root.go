@@ -27,8 +27,13 @@ func RootCmd() *cobra.Command {
 				tmux_handler.CreateNewSession(new_session_name)
 				tmux_handler.SwitchSession(new_session_name)
 			} else {
+				is_attached := tmux_handler.IsSessionAttached(sessions)
 				session_name := tmux_handler.FindSessionById(sessions, choice)
-				tmux_handler.SwitchSession(session_name)
+				if is_attached {
+					tmux_handler.SwitchSession(session_name)
+				} else {
+					tmux_handler.AttachSession(session_name)
+				}
 			}
 		},
 	}
