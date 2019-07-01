@@ -128,3 +128,17 @@ func PromptUserToNewSessionName() string {
 	new_session_name := scanner.Text()
 	return new_session_name
 }
+
+func ListTmuxSessionsForKilling(sessions Sessions) {
+	fmt.Printf(ErrorColor, "=====KILL SESSION=====\n")
+	for _, session := range sessions {
+		var list string
+		if session.Attached == "1" {
+			list = strconv.Itoa(session.Id) + ": " + session.Name + " (Attached)"
+		} else {
+			list = strconv.Itoa(session.Id) + ": " + session.Name
+		}
+		fmt.Println(list)
+	}
+	fmt.Printf(ErrorColor, "=======================\n")
+}
