@@ -4,7 +4,7 @@ import (
   "github.com/spf13/cobra"
   "log"
   "os"
-  "github.com/garigari-kun/easy-tmux/tmux_handler"
+  "github.com/garigari-kun/et/tmux_handler"
 )
 
 func RootCmd() *cobra.Command {

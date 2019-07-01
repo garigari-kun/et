@@ -1,7 +1,7 @@
 package main
 
 import (
-  "github.com/garigari-kun/easy-tmux/cmd"
+  "github.com/garigari-kun/et/cmd"
 )
 
 func main() {
