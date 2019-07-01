@@ -98,6 +98,18 @@ func SwitchSession(new_session string) {
 	}
 }
 
+func KillSession(session_name string) {
+	var attach_cmd *exec.Cmd
+	attach_cmd = exec.Command("tmux", "kill-session", "-t", session_name)
+	attach_cmd.Stdin = os.Stdin
+	attach_cmd.Stdout = os.Stdout
+	attach_cmd.Stderr = os.Stderr
+	err := attach_cmd.Run()
+	if err != nil {
+		log.Print(err)
+	}
+}
+
 func ListChoicesToTerminal(sessions Sessions) {
 	fmt.Printf(NoticeColor, "=====Create new session or Attach another session=====\n")
 	fmt.Printf(WarningColor, "0: Create New Session\n")
