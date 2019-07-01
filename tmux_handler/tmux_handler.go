@@ -85,6 +85,18 @@ func CreateNewSession(new_session string) {
 	}
 }
 
+func CreateAndAttachSession(new_session string) {
+	var attach_cmd *exec.Cmd
+	attach_cmd = exec.Command("tmux", "new", "-s", new_session)
+	attach_cmd.Stdin = os.Stdin
+	attach_cmd.Stdout = os.Stdout
+	attach_cmd.Stderr = os.Stderr
+	err := attach_cmd.Run()
+	if err != nil {
+		log.Print(err)
+	}
+}
+
 func SwitchSession(new_session string) {
 	var attach_cmd *exec.Cmd
 	attach_cmd = exec.Command("tmux switch-client -t " + new_session)
