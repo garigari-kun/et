@@ -3,7 +3,7 @@ Make tmux easier
 
 ## How to install
 ```
-$ go get -u github.com/garigari-kun/easy-tmux
+$ go get -u github.com/garigari-kun/et
 ```
 
 ## Usage
