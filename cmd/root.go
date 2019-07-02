@@ -14,11 +14,6 @@ func RootCmd() *cobra.Command {
 		Use:   "et",
 		Short: "easy-tmux",
 		Run: func(cmd *cobra.Command, args []string) {
-			env := os.Getenv("TMUX")
-			if env == "" {
-				log.Print("env load error")
-			}
-
 			sessions := tmux_handler.SetTmuxSessions()
 			tmux_handler.ListChoicesToTerminal(sessions)
 			choice := tmux_handler.PromptUserChoice()
