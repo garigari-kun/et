@@ -42,8 +42,8 @@ func SetTmuxSessions() Sessions {
 	return session_slice
 }
 
-func IsSessionAttached(sessions Sessions) bool {
-	for _, session := range sessions {
+func (s Sessions) IsSessionAttached() bool {
+	for _, session := range s {
 		if session.Attached == "1" {
 			return true
 		}
