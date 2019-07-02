@@ -3,6 +3,7 @@ package cmd
 import (
 	"log"
 	"os"
+	"strings"
 
 	"github.com/garigari-kun/et/tmux_handler"
 	"github.com/spf13/cobra"
@@ -25,6 +26,7 @@ func RootCmd() *cobra.Command {
 			if choice == "0" {
 				is_attached := tmux_handler.IsSessionAttached(sessions)
 				new_session_name := tmux_handler.PromptUserToNewSessionName()
+				new_session_name = strings.Replace(new_session_name, " ", "-", -1)
 				if is_attached {
 					tmux_handler.CreateNewSession(new_session_name)
 					tmux_handler.SwitchSession(new_session_name)
