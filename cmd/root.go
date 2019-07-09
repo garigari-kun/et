@@ -12,26 +12,22 @@ import (
 func RootCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "et",
-		Short: "easy-tmux",
+		Short: "List all sessions. You can choose whether you create a new session or attach existing session.",
 		Run: func(cmd *cobra.Command, args []string) {
-			sessions := tmux_handler.SetTmuxSessions()
-			tmux_handler.ListChoicesToTerminal(sessions)
+			sessions := tmux_handler.NewTmuxSessions()
+			sessions.ListChoicesToTerminal()
 			choice := tmux_handler.PromptUserChoice()
 
 			if choice == "0" {
-				is_attached := sessions.IsSessionAttached()
-				new_session_name := tmux_handler.PromptUserToNewSessionName()
-				new_session_name = strings.Replace(new_session_name, " ", "-", -1)
-				if is_attached {
-					tmux_handler.CreateNewSession(new_session_name)
-					tmux_handler.SwitchSession(new_session_name)
+				new_session_name := strings.Replace(tmux_handler.PromptUserToNewSessionName(), " ", "-", -1)
+				if sessions.IsSessionAttached() {
+					tmux_handler.CreateNewSession(new_session_name, true)
 				} else {
 					tmux_handler.CreateAndAttachSession(new_session_name)
 				}
 			} else {
-				is_attached := sessions.IsSessionAttached()
-				session_name := tmux_handler.FindSessionById(sessions, choice)
-				if is_attached {
+				session_name := sessions.FindSessionById(choice)
+				if sessions.IsSessionAttached() {
 					tmux_handler.SwitchSession(session_name)
 				} else {
 					tmux_handler.AttachSession(session_name)
