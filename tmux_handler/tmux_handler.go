@@ -102,7 +102,7 @@ func AttachSession(session_name string) {
 	}
 }
 
-func CreateNewSession(new_session string) {
+func CreateNewSession(new_session string, is_switched bool) {
 	var attach_cmd *exec.Cmd
 	attach_cmd = exec.Command("tmux", "new", "-s", new_session, "-d")
 	attach_cmd.Stdin = os.Stdin
@@ -111,6 +111,10 @@ func CreateNewSession(new_session string) {
 	err := attach_cmd.Run()
 	if err != nil {
 		log.Print(err)
+	}
+
+	if is_switched {
+		SwitchSession(new_session)
 	}
 }
 
