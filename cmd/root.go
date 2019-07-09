@@ -12,10 +12,10 @@ import (
 func RootCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "et",
-		Short: "easy-tmux",
+		Short: "List all sessions. You can choose whether you create a new session or attach existing session.",
 		Run: func(cmd *cobra.Command, args []string) {
-			sessions := tmux_handler.SetTmuxSessions()
-			tmux_handler.ListChoicesToTerminal(sessions)
+			sessions := tmux_handler.NewTmuxSessions()
+			sessions.ListChoicesToTerminal()
 			choice := tmux_handler.PromptUserChoice()
 
 			if choice == "0" {
@@ -30,7 +30,7 @@ func RootCmd() *cobra.Command {
 				}
 			} else {
 				is_attached := sessions.IsSessionAttached()
-				session_name := tmux_handler.FindSessionById(sessions, choice)
+				session_name := sessions.FindSessionById(choice)
 				if is_attached {
 					tmux_handler.SwitchSession(session_name)
 				} else {

@@ -26,7 +26,7 @@ const (
 	DebugColor   = "\033[0;36m%s\033[0m"
 )
 
-func SetTmuxSessions() Sessions {
+func NewTmuxSessions() Sessions {
 	out, err := exec.Command("sh", "-c", "tmux ls  -F '#{session_name}:#{session_attached}'").Output()
 	if err != nil {
 		log.Print(err)
@@ -51,14 +51,43 @@ func (s Sessions) IsSessionAttached() bool {
 	return false
 }
 
-func FindSessionById(sessions Sessions, id string) string {
-	for _, session := range sessions {
+func (s Sessions) FindSessionById(id string) string {
+	for _, session := range s {
 		if strconv.Itoa(session.Id) == id {
 			return session.Name
 		}
 	}
 	log.Print("Can't find session name the id you entered.")
 	return "false"
+}
+
+func (s Sessions) ListTmuxSessionsForKilling() {
+	fmt.Printf(ErrorColor, "=====KILL SESSION=====\n")
+	for _, session := range s {
+		var list string
+		if session.Attached == "1" {
+			list = strconv.Itoa(session.Id) + ": " + session.Name + " (Attached)"
+		} else {
+			list = strconv.Itoa(session.Id) + ": " + session.Name
+		}
+		fmt.Println(list)
+	}
+	fmt.Printf(ErrorColor, "=======================\n")
+}
+
+func (s Sessions) ListChoicesToTerminal() {
+	fmt.Printf(NoticeColor, "=====Create new session or Attach another session=====\n")
+	fmt.Printf(WarningColor, "0: Create New Session\n")
+	for _, session := range s {
+		var list string
+		if session.Attached == "1" {
+			list = strconv.Itoa(session.Id) + ": " + session.Name + " (Attached)"
+		} else {
+			list = strconv.Itoa(session.Id) + ": " + session.Name
+		}
+		fmt.Println(list)
+	}
+	fmt.Printf(NoticeColor, "======================================================\n")
 }
 
 func AttachSession(session_name string) {
@@ -122,21 +151,6 @@ func KillSession(session_name string) {
 	}
 }
 
-func ListChoicesToTerminal(sessions Sessions) {
-	fmt.Printf(NoticeColor, "=====Create new session or Attach another session=====\n")
-	fmt.Printf(WarningColor, "0: Create New Session\n")
-	for _, session := range sessions {
-		var list string
-		if session.Attached == "1" {
-			list = strconv.Itoa(session.Id) + ": " + session.Name + " (Attached)"
-		} else {
-			list = strconv.Itoa(session.Id) + ": " + session.Name
-		}
-		fmt.Println(list)
-	}
-	fmt.Printf(NoticeColor, "======================================================\n")
-}
-
 func PromptUserChoice() string {
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Printf(InfoColor, "Enter what you want: ")
@@ -151,18 +165,4 @@ func PromptUserToNewSessionName() string {
 	scanner.Scan()
 	new_session_name := scanner.Text()
 	return new_session_name
-}
-
-func ListTmuxSessionsForKilling(sessions Sessions) {
-	fmt.Printf(ErrorColor, "=====KILL SESSION=====\n")
-	for _, session := range sessions {
-		var list string
-		if session.Attached == "1" {
-			list = strconv.Itoa(session.Id) + ": " + session.Name + " (Attached)"
-		} else {
-			list = strconv.Itoa(session.Id) + ": " + session.Name
-		}
-		fmt.Println(list)
-	}
-	fmt.Printf(ErrorColor, "=======================\n")
 }
