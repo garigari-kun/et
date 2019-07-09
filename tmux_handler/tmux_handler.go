@@ -90,6 +90,12 @@ func (s Sessions) ListChoicesToTerminal() {
 	fmt.Printf(NoticeColor, "======================================================\n")
 }
 
+func ListChoicesForWindow() {
+	fmt.Printf(NoticeColor, "=====Create new window=====\n")
+	fmt.Printf(WarningColor, "0: Create New Window\n")
+	fmt.Printf(NoticeColor, "===========================\n")
+}
+
 func AttachSession(session_name string) {
 	var attach_cmd *exec.Cmd
 	attach_cmd = exec.Command("tmux", "attach", "-t", session_name)
@@ -155,6 +161,18 @@ func KillSession(session_name string) {
 	}
 }
 
+func CreateAndAttachWindow(new_window string) {
+	var attach_cmd *exec.Cmd
+	attach_cmd = exec.Command("tmux", "new-window", "-n", new_window)
+	attach_cmd.Stdin = os.Stdin
+	attach_cmd.Stdout = os.Stdout
+	attach_cmd.Stderr = os.Stderr
+	err := attach_cmd.Run()
+	if err != nil {
+		log.Print(err)
+	}
+}
+
 func PromptUserChoice() string {
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Printf(InfoColor, "Enter what you want: ")
@@ -166,6 +184,14 @@ func PromptUserChoice() string {
 func PromptUserToNewSessionName() string {
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Println("Enter new session name: ")
+	scanner.Scan()
+	new_session_name := scanner.Text()
+	return new_session_name
+}
+
+func PromptUserToNewWindowName() string {
+	scanner := bufio.NewScanner(os.Stdin)
+	fmt.Printf(InfoColor, "Enter new window name: ")
 	scanner.Scan()
 	new_session_name := scanner.Text()
 	return new_session_name
