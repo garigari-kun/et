@@ -11,7 +11,7 @@ func KillCmd() *cobra.Command {
 		Short: "Kill tmux session",
 		Run: func(cmd *cobra.Command, args []string) {
 			sessions := tmux_handler.NewTmuxSessions()
-			sessions.ListTmuxSessionsForKilling()
+			sessions.ListTmuxKillingSessions()
 			choice := tmux_handler.PromptUserChoice()
 			session_name := sessions.FindSessionById(choice)
 			tmux_handler.KillSession(session_name)

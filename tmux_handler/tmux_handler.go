@@ -61,7 +61,7 @@ func (s Sessions) FindSessionById(id string) string {
 	return "false"
 }
 
-func (s Sessions) ListTmuxSessionsForKilling() {
+func (s Sessions) ListTmuxKillingSessions() {
 	fmt.Printf(ErrorColor, "=====KILL SESSION=====\n")
 	for _, session := range s {
 		var list string
