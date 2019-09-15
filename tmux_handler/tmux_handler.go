@@ -16,6 +16,12 @@ type Session struct {
 	Attached string
 }
 
+type Window struct {
+	Id       int
+	Name     string
+	Attached string
+}
+
 type Sessions []Session
 
 const (
@@ -40,6 +46,14 @@ func NewTmuxSessions() Sessions {
 		session_slice = append(session_slice, session)
 	}
 	return session_slice
+}
+
+func NewTmuxWindows() {
+	// out, err := exec.Command("sh", "-c", "tmux ls  -F '#{window_name}'").Output()
+	// if err != nil {
+	// 	log.Print(err)
+	// }
+	// splited_out := strings.Fields(string(out))
 }
 
 func (s Sessions) IsSessionAttached() bool {

@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"log"
-	"strings"
 
 	"github.com/garigari-kun/et/tmux_handler"
 	"github.com/spf13/cobra"
@@ -16,8 +15,9 @@ func WindowCmd() *cobra.Command {
 			tmux_handler.ListChoicesForWindow()
 			choice := tmux_handler.PromptUserChoice()
 			if choice == "0" {
-				new_window_name := strings.Replace(tmux_handler.PromptUserToNewWindowName(), " ", "-", -1)
-				tmux_handler.CreateAndAttachWindow(new_window_name)
+				// new_window_name := strings.Replace(tmux_handler.PromptUserToNewWindowName(), " ", "-", -1)
+				// tmux_handler.CreateAndAttachWindow(new_window_name)
+				log.Print("New window will be created")
 			} else {
 				log.Print("No function is available.")
 			}
