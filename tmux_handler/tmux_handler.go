@@ -16,7 +16,15 @@ type Session struct {
 	Attached string
 }
 
+type Window struct {
+	Id     int
+	Name   string
+	Active string
+}
+
 type Sessions []Session
+
+type Windows []Window
 
 const (
 	InfoColor    = "\033[1;34m%s\033[0m"
@@ -40,6 +48,23 @@ func NewTmuxSessions() Sessions {
 		session_slice = append(session_slice, session)
 	}
 	return session_slice
+}
+
+func NewTmuxWindows() Windows {
+	out, err := exec.Command("sh", "-c", "tmux list-windows -F '#{window_name}:#{window_active}'").Output()
+	if err != nil {
+		log.Print(err)
+	}
+	splited_out := strings.Fields(string(out))
+
+	var window_slice Windows
+	for index, window := range splited_out {
+		splited_windows := strings.Split(window, ":")
+		window := Window{Id: index + 1, Name: splited_windows[0], Active: splited_windows[1]}
+		window_slice = append(window_slice, window)
+	}
+
+	return window_slice
 }
 
 func (s Sessions) IsSessionAttached() bool {

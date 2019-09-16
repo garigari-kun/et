@@ -17,6 +17,8 @@ func WindowCmd() *cobra.Command {
 			sessions := tmux_handler.NewTmuxSessions()
 			if sessions.IsSessionAttached() {
 				log.Print("session is attached")
+				windows := tmux_handler.NewTmuxWindows()
+				log.Print(windows)
 			} else {
 				log.Print("Session is not attached. Can't create window")
 				os.Exit(1)
