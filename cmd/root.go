@@ -37,6 +37,7 @@ func RootCmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(KillCmd())
+	cmd.AddCommand(WindowCmd())
 	return cmd
 }
 
