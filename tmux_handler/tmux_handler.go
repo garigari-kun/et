@@ -115,6 +115,21 @@ func (s Sessions) ListChoicesToTerminal() {
 	fmt.Printf(NoticeColor, "======================================================\n")
 }
 
+func (w Windows) ListChoicesToTerminalForWindows() {
+	fmt.Printf(NoticeColor, "=====Create new window================================\n")
+	fmt.Printf(WarningColor, "0: Create New Window\n")
+	for _, window := range w {
+		var list string
+		if window.Active == "1" {
+			list = strconv.Itoa(window.Id) + ": " + window.Name + " (Active)"
+		} else {
+			list = strconv.Itoa(window.Id) + ": " + window.Name
+		}
+		fmt.Println(list)
+	}
+	fmt.Printf(NoticeColor, "======================================================\n")
+}
+
 func AttachSession(session_name string) {
 	var attach_cmd *exec.Cmd
 	attach_cmd = exec.Command("tmux", "attach", "-t", session_name)
