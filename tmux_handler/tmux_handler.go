@@ -172,6 +172,21 @@ func CreateAndAttachSession(new_session string) {
 	}
 }
 
+func CreateNewWindow(new_window string) {
+	if len(new_window) == 0 {
+		new_window = "subwindow"
+	}
+	var attach_cmd *exec.Cmd
+	attach_cmd = exec.Command("tmux", "new-window", "-n", new_window)
+	attach_cmd.Stdin = os.Stdin
+	attach_cmd.Stdout = os.Stdout
+	attach_cmd.Stderr = os.Stderr
+	err := attach_cmd.Run()
+	if err != nil {
+		log.Print(err)
+	}
+}
+
 func SwitchSession(new_session string) {
 	var attach_cmd *exec.Cmd
 	attach_cmd = exec.Command("tmux switch-client -t " + new_session)
@@ -211,4 +226,12 @@ func PromptUserToNewSessionName() string {
 	scanner.Scan()
 	new_session_name := scanner.Text()
 	return new_session_name
+}
+
+func PromptUserToNewWindowName() string {
+	scanner := bufio.NewScanner(os.Stdin)
+	fmt.Println("Enter new window name: ")
+	scanner.Scan()
+	new_window_name := scanner.Text()
+	return new_window_name
 }

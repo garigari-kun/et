@@ -3,6 +3,7 @@ package cmd
 import (
 	"log"
 	"os"
+	"strings"
 
 	"github.com/garigari-kun/et/tmux_handler"
 	"github.com/spf13/cobra"
@@ -19,7 +20,10 @@ func WindowCmd() *cobra.Command {
 				windows := tmux_handler.NewTmuxWindows()
 				windows.ListChoicesToTerminalForWindows()
 				choice := tmux_handler.PromptUserChoice()
-				log.Print(choice)
+				if choice == "0" {
+					new_window_name := strings.Replace(tmux_handler.PromptUserToNewWindowName(), " ", "-", -1)
+					tmux_handler.CreateNewWindow(new_window_name)
+				}
 			} else {
 				log.Print("Session is not attached. Can't create window")
 				os.Exit(1)
