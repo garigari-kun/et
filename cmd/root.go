@@ -42,6 +42,7 @@ func RootCmd() *cobra.Command {
 }
 
 func Execute() {
+	tmux_handler.PrintBanner()
 	cmd := RootCmd()
 	if err := cmd.Execute(); err != nil {
 		log.Print(err)
