@@ -16,7 +16,15 @@ type Session struct {
 	Attached string
 }
 
+type Window struct {
+	Id     int
+	Name   string
+	Active string
+}
+
 type Sessions []Session
+
+type Windows []Window
 
 const (
 	InfoColor    = "\033[1;34m%s\033[0m"
@@ -40,6 +48,23 @@ func NewTmuxSessions() Sessions {
 		session_slice = append(session_slice, session)
 	}
 	return session_slice
+}
+
+func NewTmuxWindows() Windows {
+	out, err := exec.Command("sh", "-c", "tmux list-windows -F '#{window_name}:#{window_active}'").Output()
+	if err != nil {
+		log.Print(err)
+	}
+	splited_out := strings.Fields(string(out))
+
+	var window_slice Windows
+	for index, window := range splited_out {
+		splited_windows := strings.Split(window, ":")
+		window := Window{Id: index + 1, Name: splited_windows[0], Active: splited_windows[1]}
+		window_slice = append(window_slice, window)
+	}
+
+	return window_slice
 }
 
 func (s Sessions) IsSessionAttached() bool {
@@ -90,6 +115,21 @@ func (s Sessions) ListChoicesToTerminal() {
 	fmt.Printf(NoticeColor, "======================================================\n")
 }
 
+func (w Windows) ListChoicesToTerminalForWindows() {
+	fmt.Printf(NoticeColor, "=====Create new window================================\n")
+	fmt.Printf(WarningColor, "0: Create New Window\n")
+	for _, window := range w {
+		var list string
+		if window.Active == "1" {
+			list = strconv.Itoa(window.Id) + ": " + window.Name + " (Active)"
+		} else {
+			list = strconv.Itoa(window.Id) + ": " + window.Name
+		}
+		fmt.Println(list)
+	}
+	fmt.Printf(NoticeColor, "======================================================\n")
+}
+
 func AttachSession(session_name string) {
 	var attach_cmd *exec.Cmd
 	attach_cmd = exec.Command("tmux", "attach", "-t", session_name)
@@ -123,6 +163,21 @@ func CreateAndAttachSession(new_session string) {
 	var attach_cmd *exec.Cmd
 	var window_name = new_session + "-main"
 	attach_cmd = exec.Command("tmux", "new", "-s", new_session, "-n", window_name)
+	attach_cmd.Stdin = os.Stdin
+	attach_cmd.Stdout = os.Stdout
+	attach_cmd.Stderr = os.Stderr
+	err := attach_cmd.Run()
+	if err != nil {
+		log.Print(err)
+	}
+}
+
+func CreateNewWindow(new_window string) {
+	if len(new_window) == 0 {
+		new_window = "subwindow"
+	}
+	var attach_cmd *exec.Cmd
+	attach_cmd = exec.Command("tmux", "new-window", "-n", new_window)
 	attach_cmd.Stdin = os.Stdin
 	attach_cmd.Stdout = os.Stdout
 	attach_cmd.Stderr = os.Stderr
@@ -171,4 +226,12 @@ func PromptUserToNewSessionName() string {
 	scanner.Scan()
 	new_session_name := scanner.Text()
 	return new_session_name
+}
+
+func PromptUserToNewWindowName() string {
+	scanner := bufio.NewScanner(os.Stdin)
+	fmt.Println("Enter new window name: ")
+	scanner.Scan()
+	new_window_name := scanner.Text()
+	return new_window_name
 }
