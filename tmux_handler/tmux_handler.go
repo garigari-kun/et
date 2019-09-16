@@ -104,7 +104,8 @@ func AttachSession(session_name string) {
 
 func CreateNewSession(new_session string, is_switched bool) {
 	var attach_cmd *exec.Cmd
-	attach_cmd = exec.Command("tmux", "new", "-s", new_session, "-d")
+	var window_name = new_session + "-main"
+	attach_cmd = exec.Command("tmux", "new", "-s", new_session, "-d", "-n", window_name)
 	attach_cmd.Stdin = os.Stdin
 	attach_cmd.Stdout = os.Stdout
 	attach_cmd.Stderr = os.Stderr
@@ -120,7 +121,8 @@ func CreateNewSession(new_session string, is_switched bool) {
 
 func CreateAndAttachSession(new_session string) {
 	var attach_cmd *exec.Cmd
-	attach_cmd = exec.Command("tmux", "new", "-s", new_session)
+	var window_name = new_session + "-main"
+	attach_cmd = exec.Command("tmux", "new", "-s", new_session, "-n", window_name)
 	attach_cmd.Stdin = os.Stdin
 	attach_cmd.Stdout = os.Stdout
 	attach_cmd.Stderr = os.Stderr
