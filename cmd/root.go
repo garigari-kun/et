@@ -38,6 +38,7 @@ func RootCmd() *cobra.Command {
 
 	cmd.AddCommand(KillCmd())
 	cmd.AddCommand(WindowCmd())
+	cmd.AddCommand(PaneLayoutCmd())
 	return cmd
 }
 

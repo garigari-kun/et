@@ -22,9 +22,16 @@ type Window struct {
 	Active string
 }
 
+type LayoutPane struct {
+	Id   int
+	Name string
+}
+
 type Sessions []Session
 
 type Windows []Window
+
+type LayoutPanes []LayoutPane
 
 const (
 	InfoColor    = "\033[1;34m%s\033[0m"
@@ -65,6 +72,16 @@ func NewTmuxWindows() Windows {
 	}
 
 	return window_slice
+}
+
+func NewTmuxLayoutPanes() LayoutPanes {
+	var pane_types LayoutPanes
+	pane_types = append(pane_types, LayoutPane{Id: 1, Name: "v2"})
+	pane_types = append(pane_types, LayoutPane{Id: 2, Name: "v3"})
+	pane_types = append(pane_types, LayoutPane{Id: 3, Name: "h2"})
+	pane_types = append(pane_types, LayoutPane{Id: 4, Name: "h3"})
+	pane_types = append(pane_types, LayoutPane{Id: 5, Name: "tiled"})
+	return pane_types
 }
 
 func (s Sessions) IsSessionAttached() bool {
@@ -128,6 +145,139 @@ func (w Windows) ListChoicesToTerminalForWindows() {
 		fmt.Println(list)
 	}
 	fmt.Printf(NoticeColor, "======================================================\n")
+}
+
+func (p LayoutPanes) ListLayoutPanesToTerminal() {
+	fmt.Printf(NoticeColor, "=====Select pane layout================================\n")
+	for _, pane := range p {
+		var list string
+		list = strconv.Itoa(pane.Id) + ": " + pane.Name
+		fmt.Println(list)
+	}
+	fmt.Printf(NoticeColor, "=======================================================\n")
+}
+
+func (p LayoutPanes) LayoutByChoice(choice string) {
+	if choice == "1" {
+		LayoutV2()
+	} else if choice == "2" {
+		LayoutV3()
+	} else if choice == "3" {
+		LayoutH2()
+	} else if choice == "4" {
+		LayoutH3()
+	} else if choice == "5" {
+		LayoutTiled()
+	}
+}
+
+func LayoutV2() {
+	var attach_cmd *exec.Cmd
+	attach_cmd = exec.Command("tmux", "split-window", "-h")
+	attach_cmd.Stdin = os.Stdin
+	attach_cmd.Stdout = os.Stdout
+	attach_cmd.Stderr = os.Stderr
+	err := attach_cmd.Run()
+	if err != nil {
+		log.Print(err)
+	}
+}
+
+func LayoutV3() {
+	var attach_cmd *exec.Cmd
+	attach_cmd = exec.Command("tmux", "split-window", "-h")
+	attach_cmd.Stdin = os.Stdin
+	attach_cmd.Stdout = os.Stdout
+	attach_cmd.Stderr = os.Stderr
+	err := attach_cmd.Run()
+	if err != nil {
+		log.Print(err)
+	}
+	attach_cmd = exec.Command("tmux", "split-window", "-v")
+	attach_cmd.Stdin = os.Stdin
+	attach_cmd.Stdout = os.Stdout
+	attach_cmd.Stderr = os.Stderr
+	err = attach_cmd.Run()
+	if err != nil {
+		log.Print(err)
+	}
+}
+
+func LayoutH2() {
+	var attach_cmd *exec.Cmd
+	attach_cmd = exec.Command("tmux", "split-window", "-v")
+	attach_cmd.Stdin = os.Stdin
+	attach_cmd.Stdout = os.Stdout
+	attach_cmd.Stderr = os.Stderr
+	err := attach_cmd.Run()
+	if err != nil {
+		log.Print(err)
+	}
+}
+
+func LayoutH3() {
+	var attach_cmd *exec.Cmd
+	attach_cmd = exec.Command("tmux", "split-window", "-v")
+	attach_cmd.Stdin = os.Stdin
+	attach_cmd.Stdout = os.Stdout
+	attach_cmd.Stderr = os.Stderr
+	err := attach_cmd.Run()
+	if err != nil {
+		log.Print(err)
+	}
+	attach_cmd = exec.Command("tmux", "split-window", "-h")
+	attach_cmd.Stdin = os.Stdin
+	attach_cmd.Stdout = os.Stdout
+	attach_cmd.Stderr = os.Stderr
+	err = attach_cmd.Run()
+	if err != nil {
+		log.Print(err)
+	}
+}
+
+func LayoutTiled() {
+	var attach_cmd *exec.Cmd
+	attach_cmd = exec.Command("tmux", "split-window", "-v")
+	attach_cmd.Stdin = os.Stdin
+	attach_cmd.Stdout = os.Stdout
+	attach_cmd.Stderr = os.Stderr
+	err := attach_cmd.Run()
+	if err != nil {
+		log.Print(err)
+	}
+	attach_cmd = exec.Command("tmux", "split-window", "-h")
+	attach_cmd.Stdin = os.Stdin
+	attach_cmd.Stdout = os.Stdout
+	attach_cmd.Stderr = os.Stderr
+	err = attach_cmd.Run()
+	if err != nil {
+		log.Print(err)
+	}
+	out, err := exec.Command("sh", "-c", "tmux list-panes -F '#{pane_index}'").Output()
+	if err != nil {
+		log.Print(err)
+	}
+	splited_out := strings.Fields(string(out))
+	last_pane_index := splited_out[len(splited_out)-1]
+	index_num, _ := strconv.Atoi(last_pane_index)
+	splited_start_at := index_num - 2
+
+	attach_cmd = exec.Command("tmux", "select-pane", "-t", strconv.Itoa(splited_start_at))
+	attach_cmd.Stdin = os.Stdin
+	attach_cmd.Stdout = os.Stdout
+	attach_cmd.Stderr = os.Stderr
+	err = attach_cmd.Run()
+	if err != nil {
+		log.Print(err)
+	}
+	attach_cmd = exec.Command("tmux", "split-window", "-h")
+	attach_cmd.Stdin = os.Stdin
+	attach_cmd.Stdout = os.Stdout
+	attach_cmd.Stderr = os.Stderr
+	err = attach_cmd.Run()
+	if err != nil {
+		log.Print(err)
+	}
 }
 
 func AttachSession(session_name string) {
